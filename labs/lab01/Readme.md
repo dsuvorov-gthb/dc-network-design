@@ -12,12 +12,9 @@
 
 ### 2. Распределение адресного пространства:
 2.1 Распределние адресного пространства для 4-ех ЦОД-ов:
-
 ![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/135dd6b7-0688-48b4-bc54-3543a48bf50e)
 
 2.2 Распределние адресного пространства для лабораторной схемы:
-
-
 |Device | Interface | IP Address | Subnet Mask|
 |--- | --- | --- | ---|
 |Spine-1 | Lo1 | 10.0.1.0 | 255.255.255.255 (/32)|
@@ -50,3 +47,143 @@
 |Client-2 | eth0 | 10.4.0.10 | 255.255.255.248 (/29)|
 |Client-3 | eth0 | 10.4.0.18 | 255.255.255.248 (/29)|
 |Client-4 | eth0 | 10.4.0.26 | 255.255.255.248 (/29)|
+
+## Конфиги оборудования:
+### Spine-1
+
+```
+hostname Spine-1
+!
+interface Ethernet1
+   description Leaf-1 | Eth1
+   no switchport
+   ip address 10.2.1.0/31
+!
+interface Ethernet2
+   description Leaf-2 | Eth1
+   no switchport
+   ip address 10.2.1.2/31
+!
+interface Ethernet3
+   description Leaf-3 | Eth1
+   no switchport
+   ip address 10.2.1.4/31
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.0/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.0/32
+!
+end
+
+Spine-1#sh lldp neighbors
+Last table change time   : 5:37:25 ago
+Number of table inserts  : 3
+Number of table deletes  : 0
+Number of table drops    : 0
+Number of table age-outs : 0
+
+Port          Neighbor Device ID       Neighbor Port ID    TTL
+---------- ------------------------ ---------------------- ---
+Et1           Leaf-1                   Ethernet1           120
+Et2           Leaf-2                   Ethernet1           120
+Et3           Leaf-3                   Ethernet1           120
+```
+
+### Spine-2
+```
+hostname Spine-2
+!
+interface Ethernet1
+   description Leaf-1 | Eth2
+   no switchport
+   ip address 10.2.2.0/31
+!
+interface Ethernet2
+   description Leaf-2 | Eth2
+   no switchport
+   ip address 10.2.2.2/31
+!
+interface Ethernet3
+   description Leaf-3 | Eth2
+   no switchport
+   ip address 10.2.2.4/31
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.2.0/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.2.0/32
+!
+end
+
+Spine-2#sh lldp neighbors
+Last table change time   : 5:40:20 ago
+Number of table inserts  : 3
+Number of table deletes  : 0
+Number of table drops    : 0
+Number of table age-outs : 0
+
+Port          Neighbor Device ID       Neighbor Port ID    TTL
+---------- ------------------------ ---------------------- ---
+Et1           Leaf-1                   Ethernet2           120
+Et2           Leaf-2                   Ethernet2           120
+Et3           Leaf-3                   Ethernet2           120
+```
+
+### Leaf-1
+```
+hostname Leaf-1
+!
+interface Ethernet1
+   description Spine-1 | Eth1
+   no switchport
+   ip address 10.2.1.1/31
+!
+interface Ethernet2
+   description Spine-2 | Eth1
+   no switchport
+   ip address 10.2.2.1/31
+!
+interface Ethernet8
+   description Client-1 | eth0
+   no switchport
+   ip address 10.4.0.1/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.1/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.1/32
+
+Leaf-1#sh lldp neighbors
+Last table change time   : 5:43:35 ago
+Number of table inserts  : 2
+Number of table deletes  : 0
+Number of table drops    : 0
+Number of table age-outs : 0
+
+Port          Neighbor Device ID       Neighbor Port ID    TTL
+---------- ------------------------ ---------------------- ---
+Et1           Spine-1                  Ethernet1           120
+Et2           Spine-2                  Ethernet1           120
+
+Leaf-1#ping 10.4.0.2
+PING 10.4.0.2 (10.4.0.2) 72(100) bytes of data.
+80 bytes from 10.4.0.2: icmp_seq=1 ttl=64 time=9.28 ms
+80 bytes from 10.4.0.2: icmp_seq=2 ttl=64 time=7.94 ms
+80 bytes from 10.4.0.2: icmp_seq=3 ttl=64 time=6.57 ms
+80 bytes from 10.4.0.2: icmp_seq=4 ttl=64 time=7.85 ms
+80 bytes from 10.4.0.2: icmp_seq=5 ttl=64 time=4.95 ms
+
+--- 10.4.0.2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 47ms
+rtt min/avg/max/mdev = 4.950/7.321/9.287/1.468 ms, ipg/ewma 11.777/8.216 ms
+```
