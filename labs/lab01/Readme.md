@@ -240,7 +240,7 @@ PING 10.4.0.10 (10.4.0.10) 72(100) bytes of data.
 
 --- 10.4.0.10 ping statistics ---
 5 packets transmitted, 5 received, 0% packet loss, time 46ms
-rtt min/avg/max/mdev = 46.240/53.357/61.468/4.950 ms, pipe 5, ipg/ewma 11.675/57                                                                                        .083 ms
+rtt min/avg/max/mdev = 46.240/53.357/61.468/4.950 ms, pipe 5, ipg/ewma 11.675/57.083 ms
 ```
 ### Leaf-3
 ```
