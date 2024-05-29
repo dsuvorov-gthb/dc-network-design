@@ -117,7 +117,7 @@ Codes: C - connected, S - static, K - kernel,
 Spine-1#
 ```
 
-<details>
+<details open>
 <summary> Spine-2 (conf) </summary>
 
 ```
@@ -302,11 +302,13 @@ router ospf 100
 !
 end
 Leaf-1#
+
 ```
 
-<details>
+</details>
 
-<details>
+
+<details open>
 <summary> Leaf-2 (conf) </summary>
 
 ```
@@ -380,7 +382,7 @@ end
 Leaf-2#
 ```
 
-<details>
+</details>
   
 <details>
 <summary> Leaf-3 (conf) </summary>
@@ -460,5 +462,5 @@ end
 Leaf-3#
 ```
 
-<details>
+</details>
 
