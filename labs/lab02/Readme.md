@@ -464,3 +464,47 @@ Leaf-3#
 
 </details>
 
+### Связанность от Client-1 до Client-2, Client-3 и Client-4:
+![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/feb48fda-e5ee-4635-bde5-c9e874b8ad7f)
+
+```
+Client-1> sh ip
+
+NAME        : Client-1[1]
+IP/MASK     : 10.4.0.2/29
+GATEWAY     : 10.4.0.1
+DNS         :
+MAC         : 00:50:79:66:68:06
+LPORT       : 20000
+RHOST:PORT  : 127.0.0.1:30000
+MTU         : 1500
+
+
+
+Client-1> ping 10.4.0.10
+
+84 bytes from 10.4.0.10 icmp_seq=1 ttl=61 time=35.572 ms
+84 bytes from 10.4.0.10 icmp_seq=2 ttl=61 time=32.774 ms
+84 bytes from 10.4.0.10 icmp_seq=3 ttl=61 time=35.388 ms
+84 bytes from 10.4.0.10 icmp_seq=4 ttl=61 time=31.966 ms
+84 bytes from 10.4.0.10 icmp_seq=5 ttl=61 time=31.455 ms
+
+Client-1> ping 10.4.0.18
+
+84 bytes from 10.4.0.18 icmp_seq=1 ttl=61 time=36.139 ms
+84 bytes from 10.4.0.18 icmp_seq=2 ttl=61 time=31.229 ms
+84 bytes from 10.4.0.18 icmp_seq=3 ttl=61 time=29.845 ms
+84 bytes from 10.4.0.18 icmp_seq=4 ttl=61 time=30.164 ms
+84 bytes from 10.4.0.18 icmp_seq=5 ttl=61 time=29.581 ms
+
+Client-1> ping 10.4.0.26
+
+84 bytes from 10.4.0.26 icmp_seq=1 ttl=61 time=98.425 ms
+84 bytes from 10.4.0.26 icmp_seq=2 ttl=61 time=34.771 ms
+84 bytes from 10.4.0.26 icmp_seq=3 ttl=61 time=32.010 ms
+84 bytes from 10.4.0.26 icmp_seq=4 ttl=61 time=31.810 ms
+84 bytes from 10.4.0.26 icmp_seq=5 ttl=61 time=25.910 ms
+
+```
+
+
