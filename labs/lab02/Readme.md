@@ -117,7 +117,7 @@ Codes: C - connected, S - static, K - kernel,
 Spine-1#
 ```
 
-<details open>
+<details>
 <summary> Spine-2 (conf) </summary>
 
 ```
