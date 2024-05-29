@@ -465,7 +465,7 @@ Leaf-3#
 </details>
 
 ### Связанность от Client-1 до Client-2, Client-3 и Client-4:
-![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/feb48fda-e5ee-4635-bde5-c9e874b8ad7f)
+![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/6aff4bde-0e69-4712-ad78-b2e7e12bc866)
 
 ```
 Client-1> sh ip
