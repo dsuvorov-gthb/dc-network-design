@@ -308,7 +308,7 @@ Leaf-1#
 </details>
 
 
-<details open>
+<details>
 <summary> Leaf-2 (conf) </summary>
 
 ```
