@@ -6,7 +6,7 @@
 #### План IP-адресации
 ![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/0a38b7d8-58de-409b-b057-7f2ad6f1bf7f)
 
-#### Loopback интерфейсы, а также ptp-сети:
+#### в таблице маршрутизации появились Loopback интерфейсы, а также ptp-сети:
 
 ```
 Spine-1#sh ip route isis detail
@@ -36,6 +36,8 @@ Codes: C - connected, S - static, K - kernel,
 
 Spine-1#
 ```
+
+#### Ping до Spine-2, Leaf-1, Leaf-2, Leaf-3:
 
 <details>
 <summary> Доступность Lo1 Spine-2: </summary>
