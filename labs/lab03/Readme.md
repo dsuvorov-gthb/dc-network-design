@@ -11,7 +11,6 @@
 <summary> Spine-1 (conf) </summary>
   
 ```
-
 Spine-1#sh running-config
 ! Command: show running-config
 ! device: Spine-1 (vEOS-lab, EOS-4.29.2F)
@@ -79,14 +78,11 @@ router isis 100
 !
 end
 Spine-1#
-
-
 ```
 
 </details>
 
 ```
-
 Spine-1#sh ip route isis detail
 
 VRF: default
@@ -113,5 +109,4 @@ Codes: C - connected, S - static, K - kernel,
  I L1     10.2.2.4/31 [115/20] via 10.2.1.5, Ethernet3 Leaf-3 | Eth1
 
 Spine-1#
-
 ```
