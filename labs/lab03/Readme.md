@@ -383,3 +383,79 @@ Leaf-2#
 ```
 
 </details>
+
+<details>
+<summary> Leaf-3 (conf) </summary>
+  
+```
+Leaf-3#sh running-config
+! Command: show running-config
+! device: Leaf-3 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-3
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Spine-1 | Eth3
+   no switchport
+   ip address 10.2.1.5/31
+   isis enable 100
+   isis network point-to-point
+!
+interface Ethernet2
+   description Spine-2 | Eth3
+   no switchport
+   ip address 10.2.2.5/31
+   isis enable 100
+   isis network point-to-point
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   description Clinet-4 | Eth0
+   no switchport
+   ip address 10.4.0.25/29
+!
+interface Ethernet8
+   description Client-3 | Eth0
+   no switchport
+   ip address 10.4.0.17/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.3/32
+   isis enable 100
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.3/32
+!
+interface Management1
+!
+ip routing
+!
+router isis 100
+   net 49.0010.0000.0001.0003.00
+   !
+   address-family ipv4 unicast
+!
+end
+Leaf-3#
+```
+
+</details>
