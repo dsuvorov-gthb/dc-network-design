@@ -79,3 +79,95 @@ Client-1> ping 10.4.0.26
 
 Client-1>
 ```
+
+#### Настройки оборудования:
+
+<details>
+<summary> Spine-1 (conf) </summary>
+  
+```
+Spine-1#sh running-config
+! Command: show running-config
+! device: Spine-1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Spine-1
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Leaf-1 | Eth1
+   no switchport
+   ip address 10.2.1.0/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet2
+   description Leaf-2 | Eth1
+   no switchport
+   ip address 10.2.1.2/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet3
+   description Leaf-3 | Eth1
+   no switchport
+   ip address 10.2.1.4/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.0/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.0/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 64500
+   router-id 10.0.1.0
+   neighbor 10.2.1.1 remote-as 64500
+   neighbor 10.2.1.1 next-hop-self
+   neighbor 10.2.1.1 bfd
+   neighbor 10.2.1.1 description Leaf-1
+   neighbor 10.2.1.1 route-reflector-client
+   neighbor 10.2.1.3 remote-as 64500
+   neighbor 10.2.1.3 next-hop-self
+   neighbor 10.2.1.3 bfd
+   neighbor 10.2.1.3 description Leaf-2
+   neighbor 10.2.1.3 route-reflector-client
+   neighbor 10.2.1.5 remote-as 64500
+   neighbor 10.2.1.5 next-hop-self
+   neighbor 10.2.1.5 bfd
+   neighbor 10.2.1.5 description Leaf-3
+   neighbor 10.2.1.5 route-reflector-client
+   network 10.0.1.0/32
+   network 10.2.1.0/31
+   network 10.2.1.2/31
+   network 10.2.1.4/31
+   network 10.4.0.0/14
+!
+end
+Spine-1#
+
+```
+
+</details>
