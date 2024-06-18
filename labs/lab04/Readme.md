@@ -6,7 +6,7 @@
 #### План IP-адресации
 
 
-#### в таблице маршрутизации появились Loopback интерфейсы (/32), ptp-сети (/31) и клиентаские сети (/29):
+#### в таблице маршрутизации появились Loopback интерфейсы (/32), ptp-сети (/31) и клиентские сети (/29):
 
 ```
 Leaf-3#sh ip bgp | begin Network
@@ -171,3 +171,95 @@ Spine-1#
 ```
 
 </details>
+
+
+
+<details>
+<summary> Spine-2 (conf) </summary>
+  
+```
+Spine-2#sh running-config
+! Command: show running-config
+! device: Spine-2 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Spine-2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Leaf-1 | Eth2
+   no switchport
+   ip address 10.2.2.0/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet2
+   description Leaf-2 | Eth2
+   no switchport
+   ip address 10.2.2.2/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet3
+   description Leaf-3 | Eth2
+   no switchport
+   ip address 10.2.2.4/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.2.0/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.2.0/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 64500
+   router-id 10.0.2.0
+   neighbor 10.2.2.1 remote-as 64500
+   neighbor 10.2.2.1 next-hop-self
+   neighbor 10.2.2.1 bfd
+   neighbor 10.2.2.1 description Leaf-1
+   neighbor 10.2.2.1 route-reflector-client
+   neighbor 10.2.2.3 remote-as 64500
+   neighbor 10.2.2.3 next-hop-self
+   neighbor 10.2.2.3 bfd
+   neighbor 10.2.2.3 description Leaf-2
+   neighbor 10.2.2.3 route-reflector-client
+   neighbor 10.2.2.5 remote-as 64500
+   neighbor 10.2.2.5 next-hop-self
+   neighbor 10.2.2.5 bfd
+   neighbor 10.2.2.5 description Leaf-3
+   neighbor 10.2.2.5 route-reflector-client
+   network 10.0.2.0/32
+   network 10.2.2.0/31
+   network 10.2.2.2/31
+   network 10.2.2.4/31
+!
+end
+Spine-2#
+
+```
+
+</details>
+
