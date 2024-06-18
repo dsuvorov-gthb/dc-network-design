@@ -1,7 +1,6 @@
 ### Построение Underlay сети(BGP)
 
 #### Underlay сеть
-![Uploading image.png…]()
 
 #### План IP-адресации
 |Device | Interface | IP Address | Subnet Mask|
