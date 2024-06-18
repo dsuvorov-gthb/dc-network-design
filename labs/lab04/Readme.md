@@ -294,3 +294,243 @@ Spine-2#
 
 </details>
 
+<details>
+<summary> Leaf-1 (conf) </summary>
+  
+```
+Leaf-1#sh running-config
+! Command: show running-config
+! device: Leaf-1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-1
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Spine-1 | Eth1
+   no switchport
+   ip address 10.2.1.1/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet2
+   description Spine-2 | Eth1
+   no switchport
+   ip address 10.2.2.1/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+   description Client-1 | eth0
+   no switchport
+   ip address 10.4.0.1/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.1/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.1/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 64500
+   router-id 10.0.1.1
+   neighbor 10.2.1.0 remote-as 64500
+   neighbor 10.2.1.0 bfd
+   neighbor 10.2.1.0 description Spine-1
+   neighbor 10.2.2.0 remote-as 64500
+   neighbor 10.2.2.0 bfd
+   neighbor 10.2.2.0 description Spine-2
+   network 10.0.1.1/32
+   network 10.2.1.0/31
+   network 10.2.2.0/31
+   network 10.4.0.0/29
+!
+end
+Leaf-1#
+
+```
+
+</details>
+
+<details>
+<summary> Leaf-2 (conf) </summary>
+  
+```
+Leaf-2#sh running-config
+! Command: show running-config
+! device: Leaf-2 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Spine-1 | Eth2
+   no switchport
+   ip address 10.2.1.3/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet2
+   description Spine-2 | Eth2
+   no switchport
+   ip address 10.2.2.3/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+   description Client-2 | Eth0
+   no switchport
+   ip address 10.4.0.9/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.2/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.2/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 64500
+   router-id 10.0.1.2
+   neighbor 10.2.1.2 remote-as 64500
+   neighbor 10.2.1.2 bfd
+   neighbor 10.2.1.2 description Spine-1
+   neighbor 10.2.2.2 remote-as 64500
+   neighbor 10.2.2.2 bfd
+   neighbor 10.2.2.2 description Spine-2
+   network 10.0.1.2/32
+   network 10.2.1.2/31
+   network 10.2.2.2/31
+   network 10.4.0.8/29
+!
+end
+Leaf-2#
+
+```
+
+</details>
+
+<details>
+<summary> Leaf-3 (conf) </summary>
+  
+```
+Leaf-3#sh running-config
+! Command: show running-config
+! device: Leaf-3 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-3
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Spine-1 | Eth3
+   no switchport
+   ip address 10.2.1.5/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet2
+   description Spine-2 | Eth3
+   no switchport
+   ip address 10.2.2.5/31
+   bfd interval 200 min-rx 200 multiplier 3
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   description Clinet-4 | Eth0
+   no switchport
+   ip address 10.4.0.25/29
+!
+interface Ethernet8
+   description Client-3 | Eth0
+   no switchport
+   ip address 10.4.0.17/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.3/32
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.3/32
+!
+interface Management1
+!
+ip routing
+!
+router bgp 64500
+   router-id 10.0.1.3
+   neighbor 10.2.1.4 remote-as 64500
+   neighbor 10.2.1.4 bfd
+   neighbor 10.2.1.4 description Spine-1
+   neighbor 10.2.2.4 remote-as 64500
+   neighbor 10.2.2.4 bfd
+   neighbor 10.2.2.4 description Spine-2
+   network 10.0.1.3/32
+   network 10.2.1.4/31
+   network 10.2.2.4/31
+   network 10.4.0.16/29
+   network 10.4.0.24/29
+!
+end
+Leaf-3#
+
+```
+
+</details>
