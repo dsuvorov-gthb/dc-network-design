@@ -1,5 +1,7 @@
 ### Построение Underlay сети(BGP)
 
+![image](https://github.com/dsuvorov-gthb/dc-network-design/assets/169836298/76fcc847-cc21-4ba6-9826-840d1f712d00)
+
 #### План IP-адресации
 |Device | Interface | IP Address | Subnet Mask|
 |--- | --- | --- | ---|
