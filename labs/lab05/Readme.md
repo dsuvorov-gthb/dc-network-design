@@ -163,3 +163,466 @@ Spine-1#
 ```
 
 </details>
+
+<details>
+<summary> Spine-2 (conf) </summary>
+  
+```
+Spine-2#sh running-config
+! Command: show running-config
+! device: Spine-2 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Spine-2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Leaf-1 | Eth2
+   mtu 9214
+   no switchport
+   ip address 10.2.2.0/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description Leaf-2 | Eth2
+   mtu 9214
+   no switchport
+   ip address 10.2.2.2/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+   description Leaf-3 | Eth2
+   mtu 9214
+   no switchport
+   ip address 10.2.2.4/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.2.0/32
+   ip ospf area 0.0.0.0
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.2.0/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+ip routing
+!
+router bgp 65000
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 64500
+   neighbor EVPN-OVERLAY next-hop-unchanged
+   neighbor EVPN-OVERLAY update-source Loopback2
+   neighbor EVPN-OVERLAY ebgp-multihop 4
+   neighbor EVPN-OVERLAY send-community
+   neighbor 10.1.1.1 peer group EVPN-OVERLAY
+   neighbor 10.1.1.2 peer group EVPN-OVERLAY
+   neighbor 10.1.1.3 peer group EVPN-OVERLAY
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+router ospf 1
+   router-id 10.0.2.0
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   no passive-interface Ethernet3
+   network 0.0.0.0/0 area 0.0.0.0
+   max-lsa 12000
+!
+end
+Spine-2#
+
+```
+
+</details>
+
+<details>
+<summary> Leaf-1 (conf) </summary>
+  
+```
+Leaf-1#sh running-config
+! Command: show running-config
+! device: Leaf-1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-1
+!
+spanning-tree mode mstp
+!
+vlan 10
+   name VNI10
+!
+vlan 20
+   name VNI20
+!
+interface Ethernet1
+   description Spine-1 | Eth1
+   mtu 9214
+   no switchport
+   ip address 10.2.1.1/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description Spine-2 | Eth1
+   mtu 9214
+   no switchport
+   ip address 10.2.2.1/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+   description VXLAN_CLIENT_1
+   switchport access vlan 10
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+   description Client-1 | eth0
+   no switchport
+   ip address 10.4.0.1/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.1/32
+   ip ospf area 0.0.0.0
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.1/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+interface Vlan10
+   ip address 192.168.10.11/24
+!
+interface Vlan20
+   ip address 192.168.20.11/24
+!
+interface Vxlan1
+   description Tunnel_to_VXLAN
+   vxlan source-interface Loopback2
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10
+   vxlan vlan 20 vni 20
+   vxlan flood vtep 10.1.1.1 10.1.1.2 10.1.1.3
+!
+ip routing
+!
+router bgp 64500
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 65000
+   neighbor EVPN-OVERLAY next-hop-unchanged
+   neighbor EVPN-OVERLAY update-source Loopback2
+   neighbor EVPN-OVERLAY allowas-in 1
+   neighbor EVPN-OVERLAY ebgp-multihop 4
+   neighbor EVPN-OVERLAY send-community
+   neighbor EVPN-OVERLAY maximum-routes 12000
+   neighbor 10.1.1.0 peer group EVPN-OVERLAY
+   neighbor 10.1.2.0 peer group EVPN-OVERLAY
+   !
+   vlan 10
+      rd 10:10
+      route-target both 10:10
+      redistribute learned
+   !
+   vlan 20
+      rd 20:20
+      route-target both 20:20
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+router ospf 1
+   router-id 10.0.1.1
+   auto-cost reference-bandwidth 10000
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   max-lsa 12000
+   maximum-paths 12
+!
+end
+Leaf-1#
+
+```
+
+</details>
+
+<details>
+<summary> Leaf-2 (conf) </summary>
+  
+```
+Leaf-2#sh running-config
+! Command: show running-config
+! device: Leaf-2 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-2
+!
+spanning-tree mode mstp
+!
+vlan 10
+   name VNI1010
+!
+interface Ethernet1
+   description Spine-1 | Eth2
+   mtu 9214
+   no switchport
+   ip address 10.2.1.3/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description Spine-2 | Eth2
+   mtu 9214
+   no switchport
+   ip address 10.2.2.3/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+   description VXLAN_CLIENT_2
+   switchport access vlan 10
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+   description Client-2 | Eth0
+   no switchport
+   ip address 10.4.0.9/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.2/32
+   ip ospf area 0.0.0.0
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.2/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+interface Vlan10
+   ip address 192.168.10.12/24
+!
+interface Vxlan1
+   description Tunnel_to_VXLAN
+   vxlan source-interface Loopback2
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10
+   vxlan flood vtep 10.1.1.1 10.1.1.2 10.1.1.3
+!
+ip routing
+!
+router bgp 64500
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 65000
+   neighbor EVPN-OVERLAY next-hop-unchanged
+   neighbor EVPN-OVERLAY update-source Loopback2
+   neighbor EVPN-OVERLAY allowas-in 1
+   neighbor EVPN-OVERLAY ebgp-multihop 4
+   neighbor EVPN-OVERLAY send-community
+   neighbor EVPN-OVERLAY maximum-routes 12000
+   neighbor 10.1.1.0 peer group EVPN-OVERLAY
+   neighbor 10.1.2.0 peer group EVPN-OVERLAY
+   !
+   vlan 10
+      rd 10:10
+      route-target both 10:10
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+router ospf 1
+   router-id 10.0.1.2
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   max-lsa 12000
+!
+end
+Leaf-2#
+
+```
+
+</details>
+
+<details>
+<summary> Leaf-3 (conf) </summary>
+  
+```
+Leaf-3#sh running-config
+! Command: show running-config
+! device: Leaf-3 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Leaf-3
+!
+spanning-tree mode mstp
+!
+vlan 20
+   name VNI20
+!
+interface Ethernet1
+   description Spine-1 | Eth3
+   mtu 9214
+   no switchport
+   ip address 10.2.1.5/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description Spine-2 | Eth3
+   mtu 9214
+   no switchport
+   ip address 10.2.2.5/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   description Clinet-4 | Eth0
+   no switchport
+   ip address 10.4.0.25/29
+!
+interface Ethernet8
+   description Client-3 | Eth0
+   no switchport
+   ip address 10.4.0.17/29
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.3/32
+   ip ospf area 0.0.0.0
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.3/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+interface Vlan20
+   ip address 192.168.20.12/24
+!
+interface Vxlan1
+   description Tunnel_to_VXLAN
+   vxlan source-interface Loopback2
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10
+   vxlan vlan 20 vni 20
+   vxlan flood vtep 10.1.1.1 10.1.1.2 10.1.1.3
+!
+ip routing
+!
+router bgp 64500
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 65000
+   neighbor EVPN-OVERLAY next-hop-unchanged
+   neighbor EVPN-OVERLAY update-source Loopback2
+   neighbor EVPN-OVERLAY allowas-in 1
+   neighbor EVPN-OVERLAY ebgp-multihop 4
+   neighbor EVPN-OVERLAY send-community
+   neighbor EVPN-OVERLAY maximum-routes 12000
+   neighbor 10.1.1.0 peer group EVPN-OVERLAY
+   neighbor 10.1.2.0 peer group EVPN-OVERLAY
+   !
+   vlan 10
+      rd 10:10
+      route-target both 10:10
+      redistribute learned
+   !
+   vlan 20
+      rd 20:20
+      route-target both 20:20
+      redistribute learned
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+router ospf 1
+   router-id 10.0.1.3
+   auto-cost reference-bandwidth 10000
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   max-lsa 12000
+   maximum-paths 12
+!
+end
+Leaf-3#
+
+```
+
+</details>
