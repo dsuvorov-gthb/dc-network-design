@@ -64,3 +64,102 @@ PING 192.168.20.12 (192.168.20.12) 72(100) bytes of data.
 5 packets transmitted, 5 received, 0% packet loss, time 49ms
 rtt min/avg/max/mdev = 131.681/136.421/141.035/3.382 ms, pipe 5, ipg/ewma 12.408/135.235 ms
 ```
+
+#### Настройки оборудования:
+
+<details>
+<summary> Spine-1 (conf) </summary>
+  
+```
+Spine-1#sh running-config
+! Command: show running-config
+! device: Spine-1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model ribd
+!
+hostname Spine-1
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description Leaf-1 | Eth1
+   mtu 9214
+   no switchport
+   ip address 10.2.1.0/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet2
+   description Leaf-2 | Eth1
+   mtu 9214
+   no switchport
+   ip address 10.2.1.2/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet3
+   description Leaf-3 | Eth1
+   mtu 9214
+   no switchport
+   ip address 10.2.1.4/31
+   ip ospf network point-to-point
+   ip ospf area 0.0.0.0
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback1
+   description Underlay
+   ip address 10.0.1.0/32
+   ip ospf area 0.0.0.0
+!
+interface Loopback2
+   description Overlay
+   ip address 10.1.1.0/32
+   ip ospf area 0.0.0.0
+!
+interface Management1
+!
+ip routing
+!
+router bgp 65000
+   neighbor EVPN-OVERLAY peer group
+   neighbor EVPN-OVERLAY remote-as 64500
+   neighbor EVPN-OVERLAY next-hop-unchanged
+   neighbor EVPN-OVERLAY update-source Loopback2
+   neighbor EVPN-OVERLAY ebgp-multihop 4
+   neighbor EVPN-OVERLAY send-community
+   neighbor 10.1.1.1 peer group EVPN-OVERLAY
+   neighbor 10.1.1.2 peer group EVPN-OVERLAY
+   neighbor 10.1.1.3 peer group EVPN-OVERLAY
+   !
+   address-family evpn
+      neighbor EVPN-OVERLAY activate
+!
+router ospf 1
+   router-id 10.0.1.0
+   passive-interface default
+   no passive-interface Ethernet1
+   no passive-interface Ethernet2
+   no passive-interface Ethernet3
+   network 0.0.0.0/0 area 0.0.0.0
+   max-lsa 12000
+!
+end
+Spine-1#
+```
+
+</details>
