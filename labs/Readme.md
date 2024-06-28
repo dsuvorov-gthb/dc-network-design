@@ -6,4 +6,4 @@
 
 <a href="https://github.com/dsuvorov-gthb/dc-network-design/tree/main/labs/lab04/">04 Underlay. BGP</a>
 
-<a href="https://github.com/dsuvorov-gthb/dc-network-design/tree/main/labs/lab04/">05 VxLAN. L2 VNI</a>
+<a href="https://github.com/dsuvorov-gthb/dc-network-design/tree/main/labs/lab05/">05 VxLAN. L2 VNI</a>
